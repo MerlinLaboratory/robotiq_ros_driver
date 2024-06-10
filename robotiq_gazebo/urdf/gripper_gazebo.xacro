@@ -21,14 +21,13 @@
     </gazebo>
 
     <!-- Disabling gravity --> 
-    <!-- TODO: check whether it is useful -->
-    <!-- <gazebo reference="finger1">
+    <gazebo reference="hande_left_finger">
       <gravity>0</gravity>
     </gazebo>
   
-    <gazebo reference="finger2">
+    <gazebo reference="hande_right_finger">
       <gravity>0</gravity>
-    </gazebo> -->
+    </gazebo>
 
   </xacro:macro>
 
