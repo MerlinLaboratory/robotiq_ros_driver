@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="robotiq">
+
+  <xacro:macro name="robotiq_gazebo" params="prefix parent *origin">
+
+    <!-- includes -->
+    <xacro:include filename="$(find robotiq_description)/urdf/robotiq_hande_gripper.urdf.xacro" />
+
+    <!-- Launching each component -->
+    <!-- Gripper's main body -->
+    <xacro:robotiq_hande_gripper prefix="${prefix}" parent="${parent}">
+      <xacro:insert_block name="origin"/>
+    </xacro:robotiq_hande_gripper>
+
+    <!-- Loading Gazebo plugins -->
+    <gazebo>
+      <plugin name="ros_control" filename="libgazebo_ros_control.so">
+        <!--robotNamespace>/</robotNamespace-->
+        <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+      </plugin>
+    </gazebo>
+
+    <!-- Disabling gravity --> 
+    <!-- TODO: check whether it is useful -->
+    <!-- <gazebo reference="finger1">
+      <gravity>0</gravity>
+    </gazebo>
+  
+    <gazebo reference="finger2">
+      <gravity>0</gravity>
+    </gazebo> -->
+
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="gripper_gazebo_complete" >
+
+  <!-- robotiq_hande_gripper gazebo -->
+  <xacro:include filename="$(find robotiq_gazebo)/urdf/gripper_gazebo.xacro" />
+
+  <link name="world" />
+
+  <!-- gripper -->
+  <xacro:robotiq_gazebo prefix="" parent="world" >
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </xacro:robotiq_gazebo>
+
+</robot>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Launch file parameters -->
+  <arg name="paused"      default="false"/>
+  <arg name="debug"       default="false"/>
+  <arg name="gui"         default="true"/>
+  <arg name="rate"        default="125" />
+  
+  <!-- Start up simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- <arg name="world_name" value="$(arg world_name)"/> -->
+    <arg name="paused"     value="$(arg paused)"/>
+    <arg name="debug"      value="$(arg debug)"/>
+    <arg name="gui"        value="$(arg gui)"/>
+    <!-- <arg name="physics"    value="bullet"/> -->
+  </include>
+
+  <!-- Loading the gripper URDF -->
+  <param name="robot_description" 
+         command="$(find xacro)/xacro --inorder '$(find robotiq_gazebo)/urdf/gripper_gazebo_complete.xacro'" />
+
+  <!-- Spawn the gropper in Gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
+        args="-urdf -param robot_description -model hande"
+        output="screen" />
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <!-- Loading the controllers -->
+  <arg name="controllers" default="gazebo_gripper gripper_joint_state_controller" doc="Controllers that are activated by default."/>
+  <rosparam command="load" file="$(find robotiq_gazebo)/config/controllers.yaml"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg controllers)"/>
+
+</launch>
