@@ -1,24 +1,12 @@
-# robotiq
+# robotiq_ros_driver
 
-ROS metapackage based on the package developed by the [Control Robotics Intelligence Group](http://www.ntu.edu.sg/home/cuong/) from the [Nanyang Technological University, Singapore](http://www.ntu.edu.sg).
+ROS metapackage based on the package developed by the [Control Robotics Intelligence Group](http://www.ntu.edu.sg/home/cuong/) from the [Nanyang Technological University, Singapore](http://www.ntu.edu.sg) and now customised for [Merlin Lab](http://merlin.deib.polimi.it/).
 
 ## Setup
 
-  * Robotiq 85 Gripper with K-1363 Controller. (Modbus TCP/IP)
   * Robotiq Hand-e (Universal Robots e-series)
 
-## Maintainer
-
-[Cristian Beltran](cristianbehe.me)
-
-## Documentation
-
-  * See the installation instructions below.
-  * Throughout the various files in this repository.
-
 ## Installation
-
-see [ur3-repo](https://github.com/cambel/ur3) for a complete example using the UR3e robot in Gazebo simulator.
 
 Go to your ROS working directory. e.g.
 ```{bash}
@@ -27,7 +15,7 @@ cd ~/catkin_ws/src
 
 Clone these repository:
 ```{bash}
-git clone https://github.com/cambel/robotiq.git
+git clone https://github.com/MerlinLaboratory/robotiq_ros_driver.git
 ```
 
 Install any missing dependencies using rosdep:
@@ -38,20 +26,29 @@ rosdep install --from-paths . --ignore-src -y
 
 Now compile your ROS workspace. e.g.
 ```{bash}
-cd ~/catkin_ws && catkin_make
+cd ~/catkin_ws && catkin build
 ```
 
-### Testing the Installation
+### Testing
 
-Be sure to always source the appropriate ROS setup file, e.g:
+The repo works with the real gripper only in case the gripper is attacched to the UR5e and the robotiq URcap is installed in the teach pendant. Conversely, the repo can only be used to simulated the gripper in Gazebo.
+
+#### Testing in simulation
+
+TODO
+
+#### Testing with robot
+1) Be sure to always source the appropriate ROS setup file, e.g:
 ```{bash}
 source ~/catkin_ws/devel/setup.bash
 ```
 You might want to add that line to your `~/.bashrc`
 
-Try the `cmodel_simple_controller`:
+2) Physically connect to the ur5e through the ethernet cable and setup a static ip under the robot subnetwork (as of today: 192.168.125.X)
+
+3) Try the launching the exaple script `urcap_cmodel_simple_controller`:
 ```{bash}
-roslaunch robotiq_control cmodel_simple_controller.launch ip:=ROBOTIQ_IP_ADDRESS
+roslaunch robotiq_control urcap_cmodel_simple_controller.launch address:=ur_robot_ip
 ```
 Expected output:
 ```
