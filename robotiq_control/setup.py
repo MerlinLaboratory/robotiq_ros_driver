@@ -7,6 +7,6 @@ from catkin_pkg.python_setup import generate_distutils_setup
 # fetch values from package.xml
 setup_args = generate_distutils_setup(
     packages=['robotiq_control'],
-    package_dir={'': 'src'})
+    package_dir={'': 'script'})
 
 setup(**setup_args)
