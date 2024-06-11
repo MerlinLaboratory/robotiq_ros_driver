@@ -56,7 +56,7 @@ def askForCommand(command):
   currentCommand += ', rPR = '   + str(command.rPR )
   currentCommand += ', rSP = '   + str(command.rSP )
   currentCommand += ', rFR = '   + str(command.rFR )
-  print currentCommand
+  print(currentCommand)
   strAskForCommand  = '-----\nAvailable commands\n\n'
   strAskForCommand += 'r: Reset\n'
   strAskForCommand += 'a: Activate\n'
@@ -69,7 +69,7 @@ def askForCommand(command):
   strAskForCommand += 'd: Decrease force\n'
   strAskForCommand += 'x: Exit\n'
   strAskForCommand += '-->'
-  return raw_input(strAskForCommand)
+  return input(strAskForCommand)
 
 def publisher():
   """

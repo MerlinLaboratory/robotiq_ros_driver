@@ -2,7 +2,7 @@
 <launch>
 
   <!-- Loading the controllers -->
-  <arg name="controllers_gripper" default="gazebo_gripper gripper_joint_state_controller"
+  <arg name="controllers_gripper" default="gripper_controller gripper_joint_state_controller"
     doc="Controllers that are activated by default." />
   <rosparam command="load" file="$(find robotiq_gazebo)/config/controllers.yaml" />
   <node name="controller_spawner_gripper" pkg="controller_manager" type="spawner" respawn="false"
