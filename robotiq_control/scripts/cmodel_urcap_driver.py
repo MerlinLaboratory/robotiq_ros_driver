@@ -3,11 +3,8 @@ import os
 import sys
 import socket
 import rospy
-from robotiq_control.cmodel_urcap import RobotiqCModelURCap
+from cmodel_urcap import RobotiqCModelURCap
 from robotiq_msgs.msg import CModelCommand, CModelStatus
-
-
-
 
 def mainLoop(ur_address):
   # Gripper is a C-Model that is connected to a UR controller with the Robotiq URCap installed. 

@@ -46,9 +46,9 @@ You might want to add that line to your `~/.bashrc`
 
 2) Physically connect to the ur5e through the ethernet cable and setup a static ip under the robot subnetwork (as of today: 192.168.125.X)
 
-3) Try the launching the exaple script `urcap_cmodel_simple_controller`:
+3) Try the launching the exaple script `urcap_cmodel_test`:
 ```{bash}
-roslaunch robotiq_control urcap_cmodel_simple_controller.launch address:=ur_robot_ip
+roslaunch robotiq_control urcap_cmodel_test.launch address:=ur_robot_ip
 ```
 Expected output:
 ```

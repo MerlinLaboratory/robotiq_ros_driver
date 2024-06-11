@@ -75,7 +75,7 @@ def publisher():
   """
   Main loop which requests new commands and publish them on the CModelRobotOutput topic.
   """
-  rospy.init_node('robotiq_simple_controller')
+  rospy.init_node('robotiq_test_controller')
   pub = rospy.Publisher('command', CModelCommand, queue_size=3)
   command = CModelCommand()
   while not rospy.is_shutdown():
