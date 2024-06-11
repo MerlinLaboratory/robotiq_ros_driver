@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 import rospy
 from robotiq_msgs.msg import CModelCommand
-from std_srvs.srv import Trigger
+from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
 from time import sleep
 
 class GripperController():
   
   def __init__(self):
     rospy.init_node('robotiq_controller')
-    pub_command = rospy.Publisher('command', CModelCommand, queue_size=3)
+    self.pub_command = rospy.Publisher('command', CModelCommand, queue_size=3)
     
     # TODO: obtain these from param file
     self.gripper_velocity = 255
@@ -21,15 +21,20 @@ class GripperController():
     open_gripper_service = rospy.Service('open_gripper', Trigger, self.open_gripper)
     close_gripper_service = rospy.Service('close_gripper', Trigger, self.close_gripper)
     
-  def open_gripper(self):
+  def open_gripper(self, req):
     self.check_is_active()
     command_open = self.gen_command_open()
-    self.pub_command.pub(command_open)  
+    self.pub_command.publish(command_open)
+    
+    return TriggerResponse(True, "gripper open successfully")
   
-  def close_gripper(self):
+  def close_gripper(self, req):
     self.check_is_active()
     command_close = self.gen_command_close()
-    self.pub_command.pub(command_close)
+    self.pub_command.publish(command_close)
+    
+    return TriggerResponse(True, "gripper closed successfully")
+    
   
   ##########################################################
   ##################### Utils functions ####################
