@@ -8,4 +8,9 @@
   
   <!-- Simple Gripper interface -->
   <node name="robotiq_simple_interface" pkg="robotiq_control" type="robotiq_interface.py" output="screen"/>
+
+  <!-- Spawning the joint state controller -->
+  <rosparam file="$(find robotiq_control)/config/gripper_hande_controller.yaml" command="load"/>
+  <node name="ros_control_gripper_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="gripper_joint_state_controller" />
+
 </launch>

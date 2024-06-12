@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import rospy
-from robotiq_msgs.msg import CModelCommand
+from robotiq_msgs.msg import CModelCommand, CModelStatus
 from time import sleep
+from sensor_msgs.msg import JointState
 
 def genCommand(char, command):
   """Update the command according to the character entered by the user."""    
@@ -71,12 +72,32 @@ def askForCommand(command):
   strAskForCommand += '-->'
   return input(strAskForCommand)
 
+def gripper_status_cb(msg):
+  pass
+  joint_state_pub = rospy.Publisher('joint_states', JointState, queue_size=1)
+  
+  position = msg.gPO / 255.0 * 0.025 # meters
+  
+  joint_state_msg = JointState()
+  joint_state_msg.header.frame_id = 'hand_e_link'
+  joint_state_msg.header.stamp = rospy.Time.now()
+  joint_state_msg.name = ['hande_left_finger_joint', 'hande_right_finger_joint']
+  joint_state_msg.position = [position, position]
+  joint_state_msg.velocity = [0.0, 0,0]
+  joint_state_msg.effort   = [0.0, 0,0]
+  
+  joint_state_pub.publish(joint_state_msg)
+
+
+
 def publisher():
   """
   Main loop which requests new commands and publish them on the CModelRobotOutput topic.
   """
   rospy.init_node('robotiq_test_controller')
   pub = rospy.Publisher('command', CModelCommand, queue_size=3)
+  rospy.Subscriber('status', CModelStatus, gripper_status_cb)
+  
   command = CModelCommand()
   while not rospy.is_shutdown():
     s = askForCommand(command)
