@@ -8,13 +8,14 @@ from robotiq_msgs.msg import CModelCommand, CModelStatus
 
 
 class ControllerEmulator(object):
+  
   def __init__(self):
     expected_controller = 'gazebo_gripper'
     self.position = None
     # Setup publishers and subscribers
     ns = rospy.get_namespace()
     status_pub = rospy.Publisher('gripper/status', CModelStatus, queue_size=1)
-    gazebo_pub = rospy.Publisher('{0}/command'.format(expected_controller), Float64, queue_size=1)
+    gazebo_pub = rospy.Publisher('gripper_controller/command'.format(expected_controller), Float64, queue_size=1)
     rospy.Subscriber('gripper/command', CModelCommand, self.cb_gripper_command, queue_size=1)
     rospy.Subscriber('joint_states', JointState, self.cb_joint_states, queue_size=1)
     # Check that the gazebo_gripper controller exists
@@ -61,9 +62,7 @@ class ControllerEmulator(object):
 
 
 if __name__ == "__main__":
-  # Initialize the node
-  node_name = os.path.splitext(os.path.basename(__file__))[0]
-  rospy.init_node(node_name)
+  rospy.init_node("gripper emulator")
   emulator = ControllerEmulator()
 
 
