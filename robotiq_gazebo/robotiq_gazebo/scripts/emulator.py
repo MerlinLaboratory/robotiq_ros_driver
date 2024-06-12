@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 import os
 import rospy
-from std_msgs.msg import Float64
+from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
+from std_msgs.msg import Float64, Float64MultiArray
 from sensor_msgs.msg import JointState
 from controller_manager_msgs.srv import ListControllers
 from robotiq_msgs.msg import CModelCommand, CModelStatus
@@ -10,59 +11,44 @@ from robotiq_msgs.msg import CModelCommand, CModelStatus
 class ControllerEmulator(object):
   
   def __init__(self):
-    expected_controller = 'gazebo_gripper'
-    self.position = None
+    
     # Setup publishers and subscribers
-    ns = rospy.get_namespace()
-    status_pub = rospy.Publisher('gripper/status', CModelStatus, queue_size=1)
-    gazebo_pub = rospy.Publisher('gripper_controller/command'.format(expected_controller), Float64, queue_size=1)
-    rospy.Subscriber('gripper/command', CModelCommand, self.cb_gripper_command, queue_size=1)
-    rospy.Subscriber('joint_states', JointState, self.cb_joint_states, queue_size=1)
-    # Check that the gazebo_gripper controller exists
-    #~ controller_list_srv = ns + 'controller_manager/list_controllers'
-    controller_list_srv = 'controller_manager/list_controllers'
-    rospy.loginfo('Waiting for the {0} controller'.format(expected_controller))
-    rospy.wait_for_service(controller_list_srv, timeout=30.0)
-    list_controllers = rospy.ServiceProxy(controller_list_srv, ListControllers)
-    found = False
-    while not rospy.is_shutdown() and not found:
-      try:
-        res = list_controllers()
-        for state in res.controller:
-          if state.name == expected_controller:
-            found = True
-            break
-      except: pass
-      rospy.sleep(0.01)
-    while not rospy.is_shutdown() and self.position is None:
-      rospy.sleep(0.01)
-    self.jnt_command = self.position
-    rospy.loginfo('[cmodel_controller_emulator] successfully initialized')
-    # Report that the gripper is ready to receive commands
-    status = CModelStatus()
-    status.gACT = 1
-    status.gSTA = 3
-    while not rospy.is_shutdown():
-      gPO = int(round(230*self.position/0.8))
-      status.gPO = min(max(0, gPO), 255)
-      status_pub.publish(status)
-      rospy.sleep(0.05)
-      gazebo_pub.publish(self.jnt_command)
-      rospy.sleep(0.05)
+    # gripper_status_pub = rospy.Publisher('gripper/status', CModelStatus, queue_size=1)
+    self.gripper_command_pub = rospy.Publisher('gripper_controller/command', Float64MultiArray, queue_size=1)
+    
+    rospy.Subscriber('joint_states', JointState, self.gripper_status_callback, queue_size=1)
+    
+    # Setup services that simulate services  
+    open_gripper_service = rospy.Service('open_gripper', Trigger, self.open_gripper)
+    close_gripper_service = rospy.Service('close_gripper', Trigger, self.close_gripper)
   
-  def cb_gripper_command(self, msg):
-    self.jnt_command = 0.8*msg.rPR/230. 
-  
-  def cb_joint_states(self, msg):
-    for joint_name in msg.name:
-      if joint_name == 'finger_joint':
-        idx = msg.name.index(joint_name)
-        self.position = msg.position[idx]
+  def gripper_status_callback(self, msg):
+    for joint_name, joint_pos in zip(msg.name, msg.position):
+      if "hande_left_finger" in joint_name or "hande_right_finger" in joint_name:
+        self.position = joint_pos
         break
-
-
+  
+  def open_gripper(self, req):
+    msg = Float64MultiArray()
+    msg.data.append(0.0)
+    msg.data.append(0.0)
+    
+    self.gripper_command_pub.publish(msg)
+    return TriggerResponse(True, "Gripper opened succesfully")
+    
+  
+  def close_gripper(self, req):
+    msg = Float64MultiArray()
+    msg.data.append(0.5)
+    msg.data.append(0.5)
+    
+    self.gripper_command_pub.publish(msg)
+    return TriggerResponse(True, "Gripper closed succesfully")
+    
+  
 if __name__ == "__main__":
-  rospy.init_node("gripper emulator")
+  rospy.init_node("gripper_emulator")
   emulator = ControllerEmulator()
+  rospy.spin()
 
 

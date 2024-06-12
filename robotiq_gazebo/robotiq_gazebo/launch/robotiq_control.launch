@@ -8,4 +8,7 @@
   <node name="controller_spawner_gripper" pkg="controller_manager" type="spawner" respawn="false"
     output="screen" args="$(arg controllers_gripper)" />
 
+  <!-- Loading the gripper emulator -->
+  <node name="gripper_emulator" pkg="robotiq_gazebo" type="emulator.py" respawn="false" output="screen"/>
+
 </launch>
