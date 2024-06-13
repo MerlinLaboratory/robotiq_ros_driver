@@ -29,28 +29,39 @@ Now compile your ROS workspace. e.g.
 cd ~/catkin_ws && catkin build
 ```
 
-### Testing
+## Testing
 
 The repo works with the real gripper only in case the gripper is attacched to the UR5e and the robotiq URcap is installed in the teach pendant. Conversely, the repo can only be used to simulated the gripper in Gazebo.
 
-#### Testing in simulation
+### Testing in simulation
 
 TODO
 
-#### Testing with robot
+### Testing with robot
+Before trying to control the gripper, ensure that you have activeted the gripper and set the UR to be controlled by external entities (i.e. your computer). In particular to: 
+
+1) **Activete the gripper**: From the *installation* tab in the top left of the UR teach pendant navigate under *Gripper* and you should have the following:
+![Testing the gripper](Doc/images/activate.png)
+Press on *Activate* to activate the gripper.
+
+2) **UR controllable from external entities:** on the top right of the UR Teach Pendant it is possible to switch between local/remote control. Please ensure that you set remote as a control mean.
+
+#### 1) Commissioning script
+This part can be exploited as a commissioning script to test that the gripper is working as it should. If it is not working correctly, please check the [here](#troubleshooting).
+It will be now explained the steps to launch the commissioning script:
 1) Be sure to always source the appropriate ROS setup file, e.g:
 ```{bash}
 source ~/catkin_ws/devel/setup.bash
 ```
 You might want to add that line to your `~/.bashrc`
 
-2) Physically connect to the ur5e through the ethernet cable and setup a static ip under the robot subnetwork (as of today: 192.168.125.X)
+1) Physically connect to the ur5e through the ethernet cable and setup a static ip under the robot subnetwork (as of today: `192.168.125.10`)
 
-3) Try the launching the exaple script `urcap_cmodel_test` changing the ur_robot_ip with the actual ip of the robot:
+2) Try the launching the exaple script `urcap_cmodel_test` changing the *ur_robot_ip* with the actual ip of the robot:
 ```{bash}
 roslaunch robotiq_control urcap_cmodel_test.launch address:=ur_robot_ip
 ```
-Expected output:
+The gripper can be controlled with the following commands:
 ```
 Simple C-Model Controller
 -----
@@ -69,3 +80,17 @@ i: Increase force
 d: Decrease force
 -->
 ```
+Hereafter a video of what you should visualise in Rviz:
+![Testing the gripper](Doc/images/testing.gif)
+the real gripper should move accordigly to the Rviz visulisation.
+
+#### 2) Production Script
+This part explains how the gripper can be commanded without using a simple dashboard as the previous one. In particular, the following scripts will make available the following services that let an external user interact with the gripper from other ROS nodes:
+
+
+
+
+
+### Troubleshooting
+#### The gripper does not move when issuing close/opening
+Before asking to the gripper to open/close it is necessary to activate the gripper from the robot teach pendant. 
