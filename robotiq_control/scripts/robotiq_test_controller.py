@@ -73,7 +73,6 @@ def askForCommand(command):
   return input(strAskForCommand)
 
 def gripper_status_cb(msg):
-  pass
   joint_state_pub = rospy.Publisher('joint_states', JointState, queue_size=1)
   
   position = msg.gPO / 255.0 * 0.025 # meters

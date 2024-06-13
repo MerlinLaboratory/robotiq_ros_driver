@@ -13,10 +13,6 @@
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find robotiq_description)/urdf/robotiq_hande_gripper.xacro" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
-  <!-- Spawning the joint state controller -->
-  <rosparam file="$(find robotiq_control)/config/gripper_hande_controller.yaml" command="load"/>
-  <node name="ros_control_gripper_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="gripper_joint_state_controller" />
-
   <!-- Rviz -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robotiq_control)/config/rviz.rviz"/>
 </launch>
