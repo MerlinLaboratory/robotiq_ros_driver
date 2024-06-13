@@ -5,8 +5,7 @@
   <arg name="paused" default="false" />
   <arg name="debug" default="false" />
   <arg name="gui" default="true" />
-  <arg name="controllers_gripper" default="gripper_controller gripper_joint_state_controller"
-    doc="Controllers that are activated by default." />
+  <arg name="controllers_gripper" default="gripper_controller gripper_joint_state_controller" doc="Controllers that are activated by default." />
 
   <!-- Start up simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -14,23 +13,21 @@
     <arg name="debug" value="$(arg debug)" />
     <arg name="gui" value="$(arg gui)" />
   </include>
+    
+  <group ns="hande">
+    <!-- Loading the gripper URDF -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robotiq_gazebo)/urdf/gripper_gazebo_complete.xacro'" />
 
-  <!-- Loading the gripper URDF -->
-  <param name="robot_description"
-    command="$(find xacro)/xacro --inorder '$(find robotiq_gazebo)/urdf/gripper_gazebo_complete.xacro'" />
+    <!-- Spawn the gropper in Gazebo -->
+    <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model hande" output="screen" />
 
-  <!-- Spawn the gropper in Gazebo -->
-  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
-    args="-urdf -param robot_description -model hande"
-    output="screen" />
-
-  <!-- Given the published joint states, publish tf for the robot links -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-    respawn="true" output="screen" />
-
-  <!-- Loading the controllers -->
-  <include file="$(find robotiq_gazebo)/launch/robotiq_control.launch">
-    <arg name="controllers_gripper" value="$(arg controllers_gripper)" />
-  </include>
+    <!-- Given the published joint states, publish tf for the robot links -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+    
+    <!-- Loading the controllers -->
+    <include file="$(find robotiq_gazebo)/launch/robotiq_control.launch">
+      <arg name="controllers_gripper" value="$(arg controllers_gripper)" />
+    </include>
+</group>
 
 </launch>
