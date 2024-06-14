@@ -16,26 +16,43 @@ class GripperController():
     
     rospy.Subscriber('status', CModelStatus, self.gripper_status_cb)
     
-    # TODO: obtain these from param file
-    self.gripper_velocity = 255
-    self.gripper_force = 150
+    # Getting the params and clipping them to hardware limits
+    # Grip force: 60 - 130 N
+    # Finger speed: 20 to 150 mm/s
     
-    # TODO: get this from status value
-    self.active = True
+    def clamp(x, min, max):
+      if x < min:
+          return min
+      elif x > max:
+          return max
+      else:
+          return x
+    self.gripper_force = clamp(rospy.get_param("force"), 60, 130)
+    self.gripper_velocity = clamp(rospy.get_param("speed"), 20, 150)
+    
+    # Activate gripper
+    try:
+      status_msg = rospy.wait_for_message("status", CModelStatus, rospy.Duration(1))
+      self.active = status_msg.gSTA == 3 # 3 correspondes to gripper active
+    except:
+      self.active = False
+      
+    if self.active is False:
+      self.activate()
     
     # Instantiating services
-    open_gripper_service = rospy.Service('open_gripper', Trigger, self.open_gripper)
-    close_gripper_service = rospy.Service('close_gripper', Trigger, self.close_gripper)
+    rospy.Service('open_gripper', Trigger, self.open_gripper)
+    rospy.Service('close_gripper', Trigger, self.close_gripper)
     
   def open_gripper(self, req):
-    self.check_is_active()
+    self.activate()
     command_open = self.gen_command_open()
     self.pub_command.publish(command_open)
     
     return TriggerResponse(True, "gripper open successfully")
   
   def close_gripper(self, req):
-    self.check_is_active()
+    self.activate()
     command_close = self.gen_command_close()
     self.pub_command.publish(command_close)
     
@@ -53,17 +70,16 @@ class GripperController():
     joint_state_msg.effort   = [0.0, 0,0]
     
     self.joint_state_pub.publish(joint_state_msg)
-    
+  
+  def activate(self):
+    if self.active == False:
+      command_activate = self.gen_command_activate()
+      self.pub_command.publish(command_activate)
+      self.active = True
   
   ##########################################################
   ##################### Utils functions ####################
   ##########################################################
-  
-  def check_is_active(self):
-    if self.active == False:
-      command_activate = self.gen_command_activate()
-      self.pub_command(command_activate)
-    
   def gen_command_activate(self):
     command = CModelCommand()
     command.rACT = 1
@@ -74,11 +90,17 @@ class GripperController():
 
   def gen_command_open(self):
     command = CModelCommand()
+    command.rGTO = 1
+    command.rSP  = self.gripper_velocity
+    command.rFR  = self.gripper_force
     command.rPR = 0
     return command
 
   def gen_command_close(self):
     command = CModelCommand()
+    command.rGTO = 1
+    command.rSP  = self.gripper_velocity
+    command.rFR  = self.gripper_force
     command.rPR = 255
     return command
   

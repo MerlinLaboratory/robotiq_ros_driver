@@ -1,0 +1,10 @@
+# This file is a configuration file that is used to set the hand-e gripper opening/closing speed and force.
+# Position can be set from available services. 
+# TO BE NOTICED: that calling the service /go_to will ignore the speed and force parameters set in this file
+# Here in the following there are the min and max values for speed and force. Setting them below or above 
+# these thresholds will make the program clip them to the written limits:
+# Grip force: 60 - 130 N
+# Finger speed: 20 to 150 mm/s
+
+force: 60
+speed: 50

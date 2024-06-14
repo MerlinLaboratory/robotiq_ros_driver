@@ -5,6 +5,9 @@
   
   <group ns="hande">
 
+    <!-- Loading the params for the gripper -->
+    <rosparam command="load" file="$(find robotiq_control)/config/gripper_params.yaml"/> 
+
     <!-- CModel TCP Controller -->
     <node name="cmodel_urcap_driver" pkg="robotiq_control" type="cmodel_urcap_driver.py" output="screen" args="$(arg address)"/>
     
