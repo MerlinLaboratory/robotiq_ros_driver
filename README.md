@@ -31,23 +31,24 @@ cd ~/catkin_ws && catkin build
 
 ## Testing
 
-The repo works with the real gripper only in case the gripper is attacched to the UR5e and the robotiq URcap is installed in the teach pendant. Conversely, the repo can only be used to simulated the gripper in Gazebo.
+The repo works with the real gripper only in case the gripper is attacched to the UR5e and the robotiq URcap is installed in the teach pendant. Conversely, the repo can only be simulated in Gazebo.
 
 ### Testing in simulation
 
 TODO
 
 ### Testing with robot
-Before trying to control the gripper, ensure that you have activeted the gripper and set the UR to be controlled by external entities (i.e. your computer). In particular to: 
+#### Preliminary steps
+Before trying to control the gripper, ensure that you have **activeted the gripper** and set the UR to be **controlled by external entities** (i.e. your computer). In particular to: 
 
-1) **Activete the gripper**: From the *installation* tab in the top left of the UR teach pendant navigate under *Gripper* and you should have the following:
+1) **Activete the gripper**: From the *installation* tab in the top left of the UR teach pendant navigate under *Gripper*. After clicking you should see the following:
 ![Testing the gripper](Doc/images/activate.png)
 Press on *Activate* to activate the gripper.
 
 2) **UR controllable from external entities:** on the top right of the UR Teach Pendant it is possible to switch between local/remote control. Please ensure that you set remote as a control mean.
 
 #### 1) Commissioning script
-This part can be exploited as a commissioning script to test that the gripper is working as it should. If it is not working correctly, please check the [here](#troubleshooting).
+This part can be exploited as a commissioning script to test that the gripper is working as it should. If it is not working correctly, please check [here](#troubleshooting).
 It will be now explained the steps to launch the commissioning script:
 1) Be sure to always source the appropriate ROS setup file, e.g:
 ```{bash}
@@ -55,11 +56,12 @@ source ~/catkin_ws/devel/setup.bash
 ```
 You might want to add that line to your `~/.bashrc`
 
-1) Physically connect to the ur5e through the ethernet cable and setup a static ip under the robot subnetwork (as of today: `192.168.125.10`)
+2) Physically connect to the ur5e through the ethernet cable and setup a static ip under the robot subnetwork (as of today: `192.168.125.X`)
 
-2) Try the launching the exaple script `urcap_cmodel_test` changing the *ur_robot_ip* with the actual ip of the robot:
+3) Try launching the exaple script `urcap_cmodel_test` changing the *ur_robot_ip* with the actual ip of the robot:
 ```{bash}
-roslaunch robotiq_control urcap_cmodel_test.launch address:=ur_robot_ip
+roslaunch robotiq_control urcap_cmodel_test.launch address:=ur_robot_ip 
+roslaunch robotiq_control urcap_cmodel_test.launch address:=192.168.125.121 # For Merlin Lab
 ```
 The gripper can be controlled with the following commands:
 ```
@@ -87,10 +89,14 @@ the real gripper should move accordigly to the Rviz visulisation.
 #### 2) Production Script
 This part explains how the gripper can be commanded without using a simple dashboard as the previous one. In particular, the following scripts will make available the following services that let an external user interact with the gripper from other ROS nodes:
 
+```{bash}
+rosservice call /open_gripper 
+rosservice call /close_gripper
+```
 
-
+Despite you could set the gripper velocity, position and force, these services does not take any argument and can be set from the config file INSERIRE LINK AL FILE CONFIG. 
 
 
 ### Troubleshooting
 #### The gripper does not move when issuing close/opening
-Before asking to the gripper to open/close it is necessary to activate the gripper from the robot teach pendant. 
+Before asking to the gripper to open/close it is necessary to activate the gripper from the robot teach pendant. Please ensure that you have followed the preliminary steps.
