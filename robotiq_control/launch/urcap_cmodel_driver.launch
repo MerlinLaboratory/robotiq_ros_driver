@@ -5,7 +5,7 @@
   
   <group ns="hande">
 
-    <!-- Loading the params for the gripper -->
+    <!-- Loading the params speed and force for the gripper -->
     <rosparam command="load" file="$(find robotiq_control)/config/gripper_params.yaml"/> 
 
     <!-- CModel TCP Controller -->
