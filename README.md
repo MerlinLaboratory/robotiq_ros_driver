@@ -94,8 +94,11 @@ rosservice call /hande/open_gripper
 rosservice call /hande/close_gripper
 ```
 
-Despite you could set the gripper velocity, position and force, these services does not take any argument and can be set from the config file INSERIRE LINK AL FILE CONFIG. 
+Despite you could set the gripper velocity and force, these services does not take any argument. Therefore, velocity and force can be set from the [config](robotiq_control/config/gripper_params.yaml). However, it is still possible to use the following service to control the gripper position, velocity and force:
 
+```{bash}
+Service is still not available :) -> Code it yourself :))))
+```
 
 ### Troubleshooting
 #### The gripper does not move when issuing close/opening
