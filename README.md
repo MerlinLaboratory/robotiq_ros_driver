@@ -90,8 +90,8 @@ the real gripper should move accordigly to the Rviz visulisation.
 This part explains how the gripper can be commanded without using a simple dashboard as the previous one. In particular, the following scripts will make available the following services that let an external user interact with the gripper from other ROS nodes:
 
 ```{bash}
-rosservice call /open_gripper 
-rosservice call /close_gripper
+rosservice call /hande/open_gripper 
+rosservice call /hande/close_gripper
 ```
 
 Despite you could set the gripper velocity, position and force, these services does not take any argument and can be set from the config file INSERIRE LINK AL FILE CONFIG. 
