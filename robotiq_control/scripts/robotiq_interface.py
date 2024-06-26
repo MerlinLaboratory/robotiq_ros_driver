@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 from robotiq_msgs.msg import CModelCommand, CModelStatus
 from std_srvs.srv import Trigger, TriggerRequest, TriggerResponse
