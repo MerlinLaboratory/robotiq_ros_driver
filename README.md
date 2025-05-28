@@ -103,3 +103,6 @@ Service is still not available :) -> Code it yourself :))))
 ### Troubleshooting
 #### The gripper does not move when issuing close/opening
 Before asking to the gripper to open/close it is necessary to activate the gripper from the robot teach pendant. Please ensure that you have followed the preliminary steps.
+
+### Technical drawings
+Technical drawings for the Hand-e gripper are available here: https://assets.robotiq.com/website-assets/support_documents/document/online/Hand-E_Aubo_InstructionManual_HTML5_20190501.zip/Hand-E_Aubo_InstructionManual_HTML5/Content/6.%20Specifications.htm
